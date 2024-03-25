@@ -1,7 +1,16 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb_image.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <learnopengl/filesystem.h>
+#include <learnopengl/shader_s.h>
 
 #include <iostream>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -13,9 +22,11 @@ const unsigned int SCR_HEIGHT = 600;
 const char *vertexShaderSource = R"s(
 #version 330 core
 layout (location = 0) in vec3 aPos;
+
+uniform mat4 transform;
 void main()
 {
-   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+   gl_Position = transform*vec4(aPos.x, aPos.y, aPos.z, 1.0);
 }
 
 )s";
@@ -25,7 +36,7 @@ const char *fragmentShaderSource = R"s(
 out vec4 FragColor;
 void main()
 {
-   FragColor = vec4(1.0f, 0.1f, 0.1f, 1.0f);
+   FragColor = vec4(1.0f, 0.3f, 0.3f, 1.0f);
 }
 )s";
 
@@ -152,6 +163,14 @@ int main()
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         glDrawArrays(GL_TRIANGLES, 0, 3);
         // glBindVertexArray(0); // no need to unbind it every time
+
+        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 0.5f));
+
+
+        unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
