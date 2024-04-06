@@ -43,10 +43,7 @@ include_directories(${CMAKE_BINARY_DIR}/configuration)
 
 include_directories(include/)
 add_executable(${PROJECT_NAME}
-        ${SOURCES}
-        include/learnopengl/shader_s.h
-        include/learnopengl/shader.h
-        include/learnopengl/shader_m.h)
+        ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 

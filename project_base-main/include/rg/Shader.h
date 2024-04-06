@@ -137,9 +137,7 @@ public:
     }
 
 
-    void setUniform1f(const char *string, double d) {
 
-    }
 };
 
 

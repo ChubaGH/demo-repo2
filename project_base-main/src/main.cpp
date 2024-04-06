@@ -1,7 +1,3 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -10,11 +6,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <learnopengl/filesystem.h>
-#include <learnopengl/shader.h>
+#include <learnopengl/shader_m.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
 
 #include <iostream>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -82,10 +79,11 @@ int main()
 
     // build and compile shaders
     // -------------------------
-    Shader ourShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
+    Shader ourShader("resources/shaders/shader1.vs", "resources/shaders/shader1.fs");
 
     // load models
     // -----------
+    stbi_set_flip_vertically_on_load(false);
     Model ourModel(FileSystem::getPath("resources/objects/kejk/kejk.obj"));
 
 
