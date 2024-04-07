@@ -78,7 +78,7 @@ int main()
     // -------------------------
     Shader cakeShader("resources/shaders/shader1.vs", "resources/shaders/shader1.fs");
 
-    // load models
+    // load model
     // -----------
     Model cake(FileSystem::getPath("resources/objects/kejk/kejk.obj"));
 
@@ -103,13 +103,11 @@ int main()
         float z = cos(angle) * radius + displacement;
         model = glm::translate(model, glm::vec3(x, y, z));
 
-        // scale: Scale between 0.05 and 0.25f
-        //float scale = 1;
-        // model = glm::scale(model, glm::vec3(scale));
+
 
         // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
         float rotAngle = (rand() % 360);
-        //model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+        model = glm::rotate(model, rotAngle, glm::vec3(0.3f, 0.7f, 0.0f));
 
         // 4. now add to list of matrices
         modelMatrices[i] = model;
