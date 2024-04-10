@@ -115,7 +115,7 @@ int main()
 
     // load textures
     // -------------
-    unsigned int transparentTexture = loadTexture(FileSystem::getPath("resources/textures/grass.png").c_str());
+    unsigned int transparentTexture = loadTexture(FileSystem::getPath("resources/textures/263a.png").c_str());
 
     // transparent friends locations
     // --------------------------------
@@ -289,6 +289,7 @@ int main()
 
 
 
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -314,12 +315,13 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        friendShader.use();
         glm::mat4 model = glm::mat4(1.0f);
-        friendShader.setMat4("projection", projection);
-        friendShader.setMat4("view", view);
+
 
         //friends
+        friendShader.use();
+        friendShader.setMat4("projection", projection);
+        friendShader.setMat4("view", view);
         glBindVertexArray(transparentVAO);
         glBindTexture(GL_TEXTURE_2D, transparentTexture);
         for (unsigned int i = 0; i < friends.size(); i++)
@@ -351,9 +353,7 @@ int main()
         //LIGHT DRAWING
 
 
-
-
-        // finally show all the light sources as bright cubes
+        //  show all the light sources as bright cubes
         shaderLight.use();
         shaderLight.setMat4("projection", projection);
         shaderLight.setMat4("view", view);
