@@ -2,6 +2,12 @@
 
 Andrej Cubrilovic  148/2019  mi19148 <br/>
 
+
+## Bonus lekcije
+
+-Instancing
+-HDR, BLOOM
+
 ## Komande
 
 -W, A, S, D - Pomeranje kamere <br/>
@@ -18,6 +24,6 @@ Andrej Cubrilovic  148/2019  mi19148 <br/>
 -https://sketchfab.com (model) <br/>
 -google.com (teksture) <br/>
 
-# Asistent
+## Asistent
 
 -Marko Spasic <br/>
