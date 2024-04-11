@@ -81,13 +81,15 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
+
+
     // build and compile shaders
     // -------------------------
-    Shader cakeShader("resources/shaders/shader1.vs", "resources/shaders/shader1.fs");
+    Shader cakeShader("resources/shaders/bloom.vs", "resources/shaders/bloom.fs");
     Shader friendShader("resources/shaders/shader2.vs", "resources/shaders/shader2.fs");
-    Shader shaderLight("resources/shaders/7.bloom.vs", "resources/shaders/7.light_box.fs");
-    Shader shaderBlur("resources/shaders/7.blur.vs", "resources/shaders/7.blur.fs");
-    Shader shaderBloomFinal("resources/shaders/7.bloom_final.vs", "resources/shaders/7.bloom_final.fs");
+    Shader shaderLight("resources/shaders/bloom2.vs", "resources/shaders/light_box.fs");
+    Shader shaderBlur("resources/shaders/blur.vs", "resources/shaders/blur.fs");
+    Shader shaderBloomFinal("resources/shaders/bloom_final.vs", "resources/shaders/bloom_final.fs");
 
 
     float transparentVertices[] = {
@@ -121,11 +123,11 @@ int main()
     // --------------------------------
     vector<glm::vec3> friends
             {
-                    glm::vec3(-2.4f, 0.0f, 5.2f),
-                    glm::vec3( -1.2f, -0.5f, 5.2f),
-                    glm::vec3( 0.0f, 0.0f, 5.2f),
-                    glm::vec3(1.2f, -0.5f, 5.2f),
-                    glm::vec3 (2.4f, 0.0f, 5.2f)
+                    glm::vec3(-2.4f, 0.0f, 6.0f),
+                    glm::vec3( -1.2f, -0.5f, 6.0f),
+                    glm::vec3( 0.0f, 0.0f, 6.0f),
+                    glm::vec3(1.2f, -0.5f, 6.0f),
+                    glm::vec3 (2.4f, 0.0f, 6.0f)
             };
 
     // shader configuration
@@ -263,10 +265,10 @@ int main()
     // -------------
     // positions
     std::vector<glm::vec3> lightPositions;
-    lightPositions.push_back(glm::vec3( 0.0f, 2.0f,  2.0f));
-    lightPositions.push_back(glm::vec3(2.0f, 2.0f, 0.0f));
-    lightPositions.push_back(glm::vec3( -2.0f, 2.0f,  0.0f));
-    lightPositions.push_back(glm::vec3(0.0f,  2.0f, -2.0));
+    lightPositions.push_back(glm::vec3( 0.0f, 1.0f,  2.0f));
+    lightPositions.push_back(glm::vec3(2.0f, 1.0f, 0.0f));
+    lightPositions.push_back(glm::vec3( -2.0f, 1.0f,  0.0f));
+    lightPositions.push_back(glm::vec3(0.0f,  1.0f, -2.0));
     // colors
     std::vector<glm::vec3> lightColors;
     lightColors.push_back(svetlo);
@@ -323,6 +325,7 @@ int main()
         friendShader.setMat4("projection", projection);
         friendShader.setMat4("view", view);
         glBindVertexArray(transparentVAO);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, transparentTexture);
         for (unsigned int i = 0; i < friends.size(); i++)
         {
@@ -337,7 +340,15 @@ int main()
 
 
         // draw cakes
+
+        // set lighting uniforms
         cakeShader.use();
+        for (unsigned int i = 0; i < lightPositions.size(); i++)
+        {
+            cakeShader.setVec3("lights[" + std::to_string(i) + "].Position", (lightPositions[i] ));
+            cakeShader.setVec3("lights[" + std::to_string(i) + "].Color", svetlo);
+        }
+        cakeShader.setVec3("viewPos", camera.Position);
         cakeShader.setMat4("projection", projection);
         cakeShader.setMat4("view", view);
         cakeShader.setInt("texture_diffuse1", 0);
@@ -348,6 +359,7 @@ int main()
             glBindVertexArray(cake.meshes[i].VAO);
             glDrawElementsInstanced(GL_TRIANGLES, cake.meshes[i].indices.size(), GL_UNSIGNED_INT, 0, amount);
             glBindVertexArray(0);
+
         }
 
         //LIGHT DRAWING
@@ -362,7 +374,7 @@ int main()
         {
             model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(lightPositions[i]));
-            model = glm::scale(model, glm::vec3(0.25f));
+            model = glm::scale(model, glm::vec3(0.4f));
             shaderLight.setMat4("model", model);
             shaderLight.setVec3("lightColor", svetlo);
             renderCube();

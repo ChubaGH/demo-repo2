@@ -1,8 +1,10 @@
 # Projekat iz racunarske grafike
 
+Andrej Cubrilovic 148/2019 mi19148
+
 ## Komande
 
--W, A, S, D - Pomeranje kamere;
+-W, A, S, D - Pomeranje kamere
 -Scroll - Zoom
 -R, G, B - Promena boje svetla u crvenu, zelenu ili plavu boju
 -SPACE - Gasenje Bloom efekta
