@@ -39,6 +39,14 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+struct DirLight{
+    glm::vec3 direction;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+
+};
+
 int main()
 {
     // glfw: initialize and configure
@@ -80,12 +88,18 @@ int main()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
 
 
 
     // build and compile shaders
     // -------------------------
     Shader cakeShader("resources/shaders/bloom.vs", "resources/shaders/bloom.fs");
+    Shader cakeShader2("resources/shaders/shader3.vs", "resources/shaders/shader3.fs");
     Shader friendShader("resources/shaders/shader2.vs", "resources/shaders/shader2.fs");
     Shader shaderLight("resources/shaders/bloom2.vs", "resources/shaders/light_box.fs");
     Shader shaderBlur("resources/shaders/blur.vs", "resources/shaders/blur.fs");
@@ -141,6 +155,15 @@ int main()
     // load model
     // -----------
     Model cake(FileSystem::getPath("resources/objects/kejk/kejk.obj"));
+    Model ourModel(FileSystem::getPath("resources/objects/kejk2/kejk.obj"));
+    ourModel.SetShaderTextureNamePrefix("material.");
+
+    DirLight dirlight;
+    dirlight.direction=glm::vec3(-0.2f,-0.1f,-0.3f);
+    dirlight.ambient=glm::vec3(0.01f,0.01f,0.01f);
+    dirlight.diffuse=glm::vec3(0.5f,0.5f,0.5f);
+    dirlight.specular=glm::vec3(0.1f,0.1f,0.1f);
+
 
     // generate a large list of semi-random model transformation matrices
     // ------------------------------------------------------------------
@@ -319,7 +342,7 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 model = glm::mat4(1.0f);
 
-
+        glDisable(GL_CULL_FACE);
         //friends
         friendShader.use();
         friendShader.setMat4("projection", projection);
@@ -337,7 +360,7 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
 
-
+        glEnable(GL_CULL_FACE);
 
         // draw cakes
 
@@ -361,6 +384,30 @@ int main()
             glBindVertexArray(0);
 
         }
+
+        //special cake
+
+        cakeShader2.use();
+        cakeShader2.setMat4("projection", projection);
+        cakeShader2.setMat4("view", view);
+
+        cakeShader2.setVec3("dirLight.direction", dirlight.direction);
+        cakeShader2.setVec3("dirLight.ambient", dirlight.ambient);
+        cakeShader2.setVec3("dirLight.diffuse", dirlight.diffuse);
+        cakeShader2.setVec3("dirLight.specular", dirlight.specular);
+
+
+
+        cakeShader2.setVec3("viewPosition", camera.Position);
+        cakeShader2.setFloat("material.shininess",32.0f);
+
+
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 3.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        cakeShader2.setMat4("model", model);
+        ourModel.Draw(cakeShader2);
 
         //LIGHT DRAWING
 
