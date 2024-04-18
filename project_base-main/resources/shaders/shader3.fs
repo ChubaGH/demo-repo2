@@ -22,7 +22,7 @@ in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
 
-uniform DirLight dirlight;
+uniform DirLight dirLight;
 uniform Material material;
 
 uniform vec3 viewPosition;
@@ -45,6 +45,6 @@ void main()
 {
     vec3 normal=normalize(Normal);
     vec3 viewDir=normalize(viewPosition-FragPos);
-    vec3 result=CalcDirLight(dirlight,normal,viewDir);
-    FragColor = vec4(result,1.0);
+    vec3 result=CalcDirLight(dirLight,normal,viewDir);
+    FragColor = vec4(result, 1.0);
 }
